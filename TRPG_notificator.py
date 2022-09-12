@@ -1,6 +1,7 @@
 import requests, logging, datetime, re, os
 from bs4 import BeautifulSoup
-import parameter
+from dotenv import load_dotenv
+load_dotenv()
 
 from connect_gspread import connect_gspread
 
@@ -8,7 +9,7 @@ from connect_gspread import connect_gspread
 mono_url = 'https://calendar.monodraco.com'
 day_url = 'http://trpgtime.sakura.ne.jp/first/calendar/webcal.cgi'
 day_short_url = 'http://trpgtime.sakura.ne.jp/first/calendar/'
-search_words = parameter.search_words
+search_words = os.getenv('search_words')
 
 def main():
     ## Logging 設定
@@ -26,8 +27,8 @@ def main():
     sorted_list = sorted(event_list, key=lambda x: x['date'])
     
     ## Google spreadsheetのこれまでの通知リストを取得
-    jsonf = parameter.jsonfile
-    spread_sheet_key = parameter.spread_sheet_key
+    jsonf = os.getenv('jsonfile')
+    spread_sheet_key = os.getenv('spread_sheet_key')
     ws = connect_gspread(jsonf,spread_sheet_key,'TRPG_event_list')
     updated_event_list = get_notified_list_gsheet(ws,sorted_list)
 
@@ -256,7 +257,7 @@ def send_line_notify(notification_message):
     """
     LINEに通知する
     """
-    line_notify_token = parameter.Token_key
+    line_notify_token = os.getenv('Token_key')
     line_notify_api = 'https://notify-api.line.me/api/notify'
     headers = {'Authorization': f'Bearer {line_notify_token}'}
     data = {'message': f'message: {notification_message}'}
