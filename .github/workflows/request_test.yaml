@@ -15,6 +15,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 python-dotenv gspread oauth2client
+          pip install requests beautifulsoup4 python-dotenv gspread oauth2client flake8
       - name: Run python test
         run: cd test && python -m unittest -v request_test.py
+      - name: Run flake8 test
+        run: flake8 --max-line-length 150 --per-file-ignores test/request_test.py:E402
