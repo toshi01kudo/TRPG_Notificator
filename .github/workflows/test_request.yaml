@@ -17,6 +17,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 python-dotenv gspread oauth2client flake8
       - name: Run python test
-        run: cd test && python -m unittest -v request_test.py
+        run: cd test && python -m unittest -v
       - name: Run flake8 test
-        run: flake8 --max-line-length 150 --per-file-ignores test/request_test.py:E402
+        run: flake8 --max-line-length 150 --per-file-ignores test/test_request.py:E402
