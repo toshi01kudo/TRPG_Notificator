@@ -48,7 +48,7 @@ def main():
     logging.info('#=== Finish program ===#')
 
 
-def get_notified_list_gsheet(ws, e_list):
+def get_notified_list_gsheet(ws: classmethod, e_list: list) -> list:
     # 全ID取得
     # !!! 列数を6で計算してるため注意 !!! #
     logging.info('#=== Get list from gsheet ===#')
@@ -107,7 +107,7 @@ def get_notified_list_gsheet(ws, e_list):
     return updated_event_list
 
 
-def get_mono_event_list(soup, event_list):
+def get_mono_event_list(soup: BeautifulSoup, event_list: list) -> list:
     # モノドラコのイベントをリストで返す関数
 
     # 構造はだいたいこんな感じだった。
@@ -150,7 +150,7 @@ def get_mono_event_list(soup, event_list):
     return event_list
 
 
-def get_info_from_monodraco():
+def get_info_from_monodraco() -> list:
     # モノドラコから卓一覧をjson形式 or 辞書型で取得
     # logging.info('#=== Start monodraco function ===#')
     logging.info('#=== Get data from monodraco ===#')
@@ -174,7 +174,7 @@ def get_info_from_monodraco():
     return event_list
 
 
-def get_day_event_list(soup, event_list, date):
+def get_day_event_list(soup: BeautifulSoup, event_list: list, date: datetime.date) -> list:
     # daydreamのイベントをリストで返す関数
     # DayDreamカレンダーの日付・曜日抽出 正規表現
     day_date_regex = re.compile(r'(\d+)(\(.\))')
@@ -214,7 +214,7 @@ def get_day_event_list(soup, event_list, date):
     return event_list
 
 
-def get_info_from_daydream():
+def get_info_from_daydream() -> list:
     # DayDreamから卓一覧をjson形式 or 辞書型で取得
     # logging.info('#=== Start daydream function ===#')
     logging.info('#=== Get data from daydream ===#')
@@ -238,7 +238,7 @@ def get_info_from_daydream():
     return event_list
 
 
-def search_event(candidate_event_list):
+def search_event(candidate_event_list: list) -> list:
     # イベント候補からSEARCH_WORDSに該当するイベントを抽出する関数
     event_list = []
     for event in candidate_event_list:
@@ -249,7 +249,7 @@ def search_event(candidate_event_list):
     return event_list
 
 
-def make_text(event_list):
+def make_text(event_list: list) -> list:
     # LINE通知文を作る関数
     # 送信文字数上限が1000文字なので、800文字あたりで分割する。
     note_text = []
@@ -269,7 +269,7 @@ def make_text(event_list):
     return note_text
 
 
-def send_line_notify(notification_message):
+def send_line_notify(notification_message: str) -> None:
     """
     LINEに通知する
     """
