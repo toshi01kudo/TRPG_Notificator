@@ -12,7 +12,7 @@ load_dotenv()
 mono_url = 'https://calendar.monodraco.com'
 day_url = 'http://trpgtime.sakura.ne.jp/first/calendar/webcal.cgi'
 day_short_url = 'http://trpgtime.sakura.ne.jp/first/calendar/'
-search_words = os.getenv('search_words')
+SEARCH_WORDS = os.getenv('SEARCH_WORDS').split(',')
 
 
 def main():
@@ -239,10 +239,10 @@ def get_info_from_daydream():
 
 
 def search_event(candidate_event_list):
-    # イベント候補からsearch_wordsに該当するイベントを抽出する関数
+    # イベント候補からSEARCH_WORDSに該当するイベントを抽出する関数
     event_list = []
     for event in candidate_event_list:
-        for search_word in search_words:
+        for search_word in SEARCH_WORDS:
             if search_word in event['title'] or search_word in event['GM']:
                 event_list.append(event)
                 break
