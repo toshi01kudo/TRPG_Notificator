@@ -3,6 +3,7 @@ import logging
 import datetime
 import re
 import os
+import json
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from connect_gspread import connect_gspread
@@ -40,10 +41,10 @@ def main():
     # LINEに送信
     note_text = make_text(updated_event_list)  # リストは日付順に並べ替え
     for send_text in note_text:  # 送信文字数上限に合わせて分割して送信
-        send_line_notify(send_text)
+        send_line_masageapi(send_text)
     gs_text = 'TRPGイベントリスト: https://docs.google.com/spreadsheets/d/' + \
         spread_sheet_key + '/edit?usp=sharing'
-    send_line_notify(gs_text)
+    send_line_masageapi(gs_text)
 
     logging.info('#=== Finish program ===#')
 
@@ -269,15 +270,27 @@ def make_text(event_list: list) -> list:
     return note_text
 
 
-def send_line_notify(notification_message: str) -> None:
+def send_line_masageapi(notification_message: str) -> None:
     """
     LINEに通知する
     """
-    line_notify_token = os.getenv('Token_key')
-    line_notify_api = 'https://notify-api.line.me/api/notify'
-    headers = {'Authorization': f'Bearer {line_notify_token}'}
-    data = {'message': f'message: {notification_message}'}
-    requests.post(line_notify_api, headers=headers, data=data)
+    line_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
+    line_group_id = os.getenv('LINE_MESSAGE_API_GROUP_ID')
+    line_api_url = 'https://api.line.me/v2/bot/message/push'
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {line_token}',
+    }
+    data = {
+        'to': line_group_id,
+        'messages': [
+            {
+                'type': 'text',
+                'text': notification_message,
+            },
+        ],
+    }
+    requests.post(line_api_url, headers=headers, data=json.dumps(data))
 
 
 if __name__ == "__main__":
